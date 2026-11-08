@@ -1,0 +1,44 @@
+--- rewrite the mux URL as a pipe that loops the fixture forever ---
+{}
+mux URL now: pipe:///home/hatch/workspace/tvheadend-for-mere-mortals/tvheadend-lab/drivers/serve-test-stream.sh
+respawn: True
+--- restart the server (a mid-flight URL edit left the mux in a
+    bad-service state during exploration; a restart spawns the pipe) ---
+--- the pipe process Tvheadend spawned ---
+root 208919 5.4 0.5 376872 45912 ? Sl 22:41 0:00 ffmpeg -v error -re -stream_loop -1 -i /home/hatch/workspace/tvheadend-for-mere-mortals/tvheadend-lab/fixtures/
+2026-11-07 22:41:49.561 [   INFO] spawn: Executing "/home/hatch/workspace/tvheadend-for-mere-mortals/tvheadend-lab/drivers/serve-test-stream.sh"
+--- poll the mux scan (result 1 = OK, see t05b) ---
+poll 1: scan_state 3 scan_result 1 num_svc 1
+--- the service found on the pipe (same fictional name) ---
+Harbour Light Test / Fictional Workshop / sid 1 / encrypted False
+--- play the channel again, 8 seconds ---
+-rw-rw---- 1 root root 540K Nov  7 22:42 /home/hatch/workspace/.batch-351-363/scratch-tvheadend/playback-pipe.ts
+--- record 35 seconds from the endless stream ---
+finished recordings already on the books: 1 (the short file-mux one)
+new entry uuid: d38d1e6f351e5ae4f06b8950cc1a0897
+waiting for this recording to finish...
+polls taken: 10, finished total now: 2
+--- the finished record for THIS entry ---
+disp_title = Harbour Light Recording Test
+duration = 35
+errors = 0
+data_errors = 0
+status = Completed OK
+filename = /home/hatch/workspace/.batch-351-363/scratch-tvheadend/recordings/Harbour Light Recording Test-1.ts
+--- measure this recording's file ---
+-rw-rw-r-- 1 root root 2.6M Nov  7 22:42 /home/hatch/workspace/.batch-351-363/scratch-tvheadend/recordings/Harbour Light Recording Test-1.ts
+codec_name=mpeg2video
+codec_type=video
+codec_name=mp2
+codec_type=audio
+codec_name=mpeg2video
+codec_type=video
+codec_name=mp2
+codec_type=audio
+duration=34.450022
+--- both recordings side by side ---
+total 3.3M
+-rw-rw-r-- 1 root root 2.6M Nov  7 22:42 Harbour Light Recording Test-1.ts
+-rw-rw-r-- 1 root root 733K Nov  7 22:40 Harbour Light Recording Test.ts
+--- the server's verdict ---
+2026-11-07 22:42:41.001 [   INFO] dvr: "Harbour Light Recording Test" on "Harbour Light Test": End of program: Completed OK

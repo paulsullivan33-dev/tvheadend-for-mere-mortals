@@ -1,0 +1,28 @@
+ffmpeg makes a 20-second MPEG-TS: test pattern + 440 Hz tone,
+MPEG-2 video + MP2 audio, service metadata as shown.
+-rw-rw---- 1 root root 1.5M Nov  7 22:39 /home/hatch/workspace/tvheadend-for-mere-mortals/tvheadend-lab/fixtures/harbour-light.ts
+--- ffprobe: the programme and its two streams ---
+[PROGRAM]
+program_id=1
+program_num=1
+nb_streams=2
+pmt_pid=4096
+pcr_pid=256
+TAG:service_name=Harbour Light Test
+TAG:service_provider=Fictional Workshop
+[STREAM]
+codec_name=mpeg2video
+codec_type=video
+width=320
+height=240
+[STREAM]
+codec_name=mp2
+codec_type=audio
+[STREAM]
+codec_name=mpeg2video
+codec_type=video
+width=320
+height=240
+[STREAM]
+codec_name=mp2
+codec_type=audio

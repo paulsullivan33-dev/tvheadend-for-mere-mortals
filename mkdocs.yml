@@ -1,0 +1,31 @@
+site_name: TVHeadend for Mere Mortals
+site_description: A TV streaming server and recorder that relays what a tuner or a stream hands it. Networks, muxes, services and channels, scanning a local test stream, mapping it to a channel, playing it, and recording it honestly.
+site_url: https://paulsullivan33-dev.github.io/tvheadend-for-mere-mortals/
+copyright: 'Part of <a href="https://paulsullivan33-dev.github.io/mere-mortals/">For Mere Mortals</a> · Text <a href="https://creativecommons.org/licenses/by/4.0/">CC BY 4.0</a>, code MIT'
+
+# Guides live at the repo root (nice for GitHub browsing).
+# The deploy workflow copies them into docs/ before building.
+theme:
+  name: material
+
+nav:
+  - Home: index.md
+  - What TVHeadend Is: what-tvheadend-is.md
+  - The Moving Parts: the-moving-parts.md
+  - Installing TVHeadend: installing-tvheadend.md
+  - First Run and Access: first-run-and-access.md
+  - Your First Network and Mux: your-first-network-and-mux.md
+  - Scanning and Services: scanning-and-services.md
+  - Mapping Services to Channels: mapping-services-to-channels.md
+  - Watching and Clients: watching-and-clients.md
+  - The Programme Guide: the-programme-guide.md
+  - Recording: recording.md
+  - Pipe and File Inputs: pipe-and-file-inputs.md
+  - Access and Users: access-and-users.md
+  - Profiles and Transcoding: profiles-and-transcoding.md
+  - Real Jobs: real-jobs.md
+  - The Neighbours: the-neighbours.md
+  - Limits: limits.md
+  - Troubleshooting: troubleshooting.md
+  - Glossary: glossary.md
+  - Writing Criteria: criteria.md

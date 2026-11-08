@@ -1,0 +1,42 @@
+--- kept failure: the first attempt, without the data files visible ---
+Run during exploration, binary extracted but /usr/share/tvheadend not
+bind-mounted. The server started its HTTP and HTSP listeners, then:
+2026-11-07 22:24:22.273 [   INFO] http: Starting HTTP server 127.0.0.1:18091
+2026-11-07 22:24:22.273 [   INFO] htsp: Starting HTSP server 127.0.0.1:19091
+2026-11-07 22:24:22.338 [  ALERT] profile: no default streaming profile! reinstall data files
+2026-11-07 22:24:24.338 [  ALERT] CRASH: Signal: 6 in PRG: ./extracted/usr/bin/tvheadend (4.3-2937~g0589ce006) [62e206f71ca0a0c8aed3b284868adaab840c44be] CWD: /home/hatch/workspace/.batch-351-363/scratch-tvheadend  
+Lesson kept in chapter 3: the binary needs its data tree at the
+compiled-in path; the namespace bind mount in run-in-namespace.sh
+is how this lab supplies it without installing the package.
+
+--- the real first run (fresh config, -C first-run mode) ---
+--- server log, the lines the chapters quote ---
+2026-11-07 22:39:59.066 [   INFO] http: Starting HTTP server 127.0.0.1:18091
+2026-11-07 22:39:59.066 [   INFO] htsp: Starting HTSP server 127.0.0.1:19091
+2026-11-07 22:39:59.121 [WARNING] access: Created default wide open access controle entry
+2026-11-07 22:39:59.140 [ NOTICE] START: HTS Tvheadend version 4.3-2937~g0589ce006 started, running as PID:208213 UID:0 GID:0, CWD:/home/hatch/workspace/.batch-351-363/scratch-tvheadend CNF:/home/hatch/workspace/.batch-351-363/scratch-tvheadend/config
+2026-11-07 22:39:59.526 [   INFO] scanfile: DVB-T - loaded 46 regions with 1171 networks
+
+--- GET / (the web interface answers with a redirect) ---
+HTTP/1.1 302 Found
+Server: HTS/tvheadend
+Cache-Control: no-cache
+Connection: Keep-Alive
+Location: /gui/
+Content-Type: text/html
+Content-Length: 163
+
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML 2.0//EN">
+<HTML><HEAD>
+<TITLE>Redirect</TITLE>
+</HEAD><BODY>
+
+--- GET /api/serverinfo ---
+{"sw_version":"4.3-2937~g0589ce006","api_version":20,"name":"Tvheadend","capabilities":["caclient","tvadapters","satip_client","satip_server","trace","libav"],"build_timestamp":"2026-11-06T19:34:24+0000"}
+
+--- listening sockets: web and HTSP, loopback only ---
+LISTEN 0      0          127.0.0.1:19091      0.0.0.0:*    users:(("tvheadend",pid=208213,fd=6))
+LISTEN 0      0          127.0.0.1:18091      0.0.0.0:*    users:(("tvheadend",pid=208213,fd=5))
+
+--- HTSP port accepts a TCP connection ---
+TCP connect to 127.0.0.1:19091: OK

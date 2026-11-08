@@ -1,0 +1,19 @@
+date: 2026-11-07T22:39:45+00:00
+
+--- os ---
+Distributor ID:	Ubuntu
+Description:	Ubuntu 24.04.5 LTS
+Release:	24.04
+Codename:	noble
+
+--- docker client, but no daemon (route 2 cannot run here) ---
+
+Server:
+failed to connect to the docker API at unix:///var/run/docker.sock; check if the path is correct and if the daemon is running: dial unix /var/run/docker.sock: connect: no such file or directory
+failed to connect to the docker API at unix:///var/run/docker.sock; check if the path is correct and if the daemon is running: dial unix /var/run/docker.sock: connect: no such file or directory
+
+--- ffmpeg (generates the lab stream) ---
+ffmpeg version 8.1.2 Copyright (c) 2000-2026 the FFmpeg developers
+
+--- tvheadend in this machine's own apt sources ---
+(empty answer: no package)

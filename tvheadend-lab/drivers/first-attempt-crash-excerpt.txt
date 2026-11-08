@@ -1,0 +1,4 @@
+2026-11-07 22:24:22.273 [   INFO] http: Starting HTTP server 127.0.0.1:18091
+2026-11-07 22:24:22.273 [   INFO] htsp: Starting HTSP server 127.0.0.1:19091
+2026-11-07 22:24:22.338 [  ALERT] profile: no default streaming profile! reinstall data files
+2026-11-07 22:24:24.338 [  ALERT] CRASH: Signal: 6 in PRG: ./extracted/usr/bin/tvheadend (4.3-2937~g0589ce006) [62e206f71ca0a0c8aed3b284868adaab840c44be] CWD: /home/hatch/workspace/.batch-351-363/scratch-tvheadend  

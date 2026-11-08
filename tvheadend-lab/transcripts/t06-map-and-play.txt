@@ -1,0 +1,45 @@
+--- map service c4453563b5681ac570d9ea8beafaf493 to a channel: POST /api/service/mapper/save ---
+{}
+--- the mapper runs as its own task; poll the channel grid until it lands ---
+poll 1: channels = 0
+poll 2: channels = 1
+2026-11-07 22:40:18.439 [   INFO] service-mapper: Lab Loopback Network/Harbour Light Mux/Harbour Light Test: success
+--- the channel grid now ---
+{
+    "entries": [
+        {
+            "uuid": "1f13483b886e4afeff091e3f7f2ce6a1",
+            "enabled": true,
+            "autoname": true,
+            "name": "Harbour Light Test",
+            "number": 0,
+            "epgauto": true,
+            "epglimit": 0,
+            "epggrab": [],
+            "dvr_pre_time": 0,
+            "dvr_pst_time": 0,
+            "epg_running": -1,
+            "services": [
+                "c4453563b5681ac570d9ea8beafaf493"
+            ],
+            "tags": [
+                "4154e2be301355a301539475b10a32e4",
+                "ac6b2501c132dc24a54cf219548cfa8c"
+            ],
+            "bouquet": ""
+        }
+    ],
+    "total": 1
+}
+--- the playlist Tvheadend publishes for its channels ---
+#EXTM3U
+#EXTINF:-1 tvg-id="1f13483b886e4afeff091e3f7f2ce6a1",Harbour Light Test
+http://127.0.0.1:18091/stream/channelid/994579231?profile=pass
+--- play the channel for 8 seconds through /stream/channel/<uuid> ---
+curl stopped by the 8-second timeout (a live stream does not end); bytes received:
+-rw-rw---- 1 root root 952K Nov  7 22:40 /home/hatch/workspace/.batch-351-363/scratch-tvheadend/playback.ts
+program,stream,mpeg2video,video,
+stream,mp2,audio
+
+stream,mpeg2video,video,
+stream,mp2,audio

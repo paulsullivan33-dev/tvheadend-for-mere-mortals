@@ -1,0 +1,99 @@
+tvheadend — the distilled commands
+====================================================================
+Placeholders: <scratch> is a scratch folder of yours; <uuid>
+is an object ID your own server assigned (they differ per
+server). Every command below is one the lab ran
+(transcripts in tvheadend-lab/transcripts/)
+or names as documented-only in the guide.
+
+INSTALL, THE LAB'S WAY (chapters 3)
+--------------------------------------------------------------------
+  # the project repository's noble index:
+  #   https://dl.cloudsmith.io/public/tvheadend/tvheadend/deb/ubuntu/dists/noble/main/binary-amd64/Packages
+  # download the .deb named in its first entry, then:
+  sha256sum tvheadend_4.3-2937~g0589ce006~noble_amd64.deb
+                                   # must match the index SHA256
+  dpkg-deb -x tvheadend_*.deb extracted/
+                                   # extract, NOT install
+  ldd extracted/usr/bin/tvheadend | grep "not found"
+                                   # lab: libdvbcsa, libpcre
+  apt-get download libdvbcsa1 libpcre3
+  dpkg-deb -x libdvbcsa1_*.deb extracted-libs/
+  dpkg-deb -x libpcre3_*.deb  extracted-libs/
+  LD_LIBRARY_PATH=<extracted-libs lib dirs> \
+    ./extracted/usr/bin/tvheadend --version
+                                   # tvheadend 4.3-2937~g0589ce006
+                                   # a packaged install needs none
+                                   # of this: apt install tvheadend
+                                   # (documented only)
+
+FIRST RUN (chapter 4)
+--------------------------------------------------------------------
+  tvheadend -C -c <scratch>/config \
+    --bindaddr 127.0.0.1 \
+    --http_port 18091 --htsp_port 19091
+                                   # -C = first run, no account:
+                                   # WIDE OPEN until you make one
+                                   # (defaults are 9981 / 9982)
+  curl http://127.0.0.1:18091/api/serverinfo
+                                   # the version, over the wire
+
+THE FIXTURE STREAM (chapter 5)
+--------------------------------------------------------------------
+  ffmpeg -f lavfi -i testsrc2=size=320x240:rate=25 \
+    -f lavfi -i sine=frequency=440:sample_rate=48000 -t 20 \
+    -c:v mpeg2video -b:v 400k -c:a mp2 -b:a 96k \
+    -metadata service_name="Harbour Light Test" \
+    -metadata service_provider="Fictional Workshop" \
+    -mpegts_original_network_id 1 \
+    -mpegts_transport_stream_id 1 -mpegts_service_id 1 \
+    -f mpegts harbour-light.ts
+  ffprobe -show_programs harbour-light.ts
+
+NETWORK AND MUX, VIA THE API (chapters 5-6)
+--------------------------------------------------------------------
+  curl -X POST .../api/mpegts/network/create \
+    --data-urlencode 'class=iptv_network' \
+    --data-urlencode 'conf={"enabled":true,"networkname":"Lab Loopback Network","skipinitscan":false}'
+  curl -X POST .../api/mpegts/network/mux_create \
+    --data-urlencode 'uuid=<network uuid>' \
+    --data-urlencode 'class=iptv_mux' \
+    --data-urlencode 'conf={"iptv_url":"file:///.../harbour-light.ts","iptv_muxname":"Harbour Light Mux","name":"Harbour Light Mux","enabled":1}'
+  curl ".../api/mpegts/mux/grid?start=0&limit=10"
+                                   # scan_state, scan_result,
+                                   # num_svc: judge by services
+  curl ".../api/mpegts/service/grid?start=0&limit=10"
+
+MAP AND PLAY (chapters 7-8)
+--------------------------------------------------------------------
+  curl -X POST .../api/service/mapper/save \
+    --data-urlencode 'node={"uuid":"00000000000000000000000000000000","services":["<service uuid>"]}'
+                                   # asynchronous: poll the
+                                   # channel grid until it lands
+  curl ".../api/channel/grid?start=0&limit=10"
+  curl ".../playlist/channels"    # the M3U your players eat
+  curl ".../stream/channel/<channel uuid>?profile=pass"
+                                   # a live stream: it does not
+                                   # end; stop it yourself
+
+THE GUIDE (chapter 9)
+--------------------------------------------------------------------
+  curl ".../api/epg/events/grid?start=0&limit=10"
+                                   # lab answer: totalCount 0 —
+                                   # the fixture sent no EIT
+
+RECORDING (chapters 10-11)
+--------------------------------------------------------------------
+  # set DVR storage FIRST (default is the home folder):
+  curl -X POST .../api/idnode/save \
+    --data-urlencode 'node={"uuid":"<dvr profile uuid>","storage":"<recordings folder>"}'
+  curl -X POST .../api/dvr/entry/create \
+    --data-urlencode 'conf={"enabled":true,"channel":"<channel uuid>","start":<epoch>,"stop":<epoch>,"title":{"eng":"Harbour Light Recording Test"}}'
+  curl ".../api/dvr/entry/grid_finished?start=0&limit=10"
+  ffprobe -show_entries format=duration <recording.ts>
+                                   # ALWAYS probe the file: a
+                                   # "Completed OK" entry can
+                                   # still hold a short stream
+  # the endless version of the fixture: mux URL becomes
+  #   pipe://<lab>/drivers/serve-test-stream.sh  (respawn on)
+  # then restart the server and rescan.

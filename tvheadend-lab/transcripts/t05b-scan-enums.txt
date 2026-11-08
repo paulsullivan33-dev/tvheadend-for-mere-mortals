@@ -1,0 +1,3 @@
+The two scan fields are enumerations. From /api/idnode/load for this mux:
+scan_state = [{'key': 0, 'val': 'IDLE'}, {'key': 1, 'val': 'PEND'}, {'key': 2, 'val': 'IDLE PEND'}, {'key': 3, 'val': 'ACTIVE'}]
+scan_result = [{'key': 0, 'val': 'NONE'}, {'key': 1, 'val': 'OK'}, {'key': 2, 'val': 'FAIL'}, {'key': 3, 'val': 'OK (partial)'}, {'key': 4, 'val': 'IGNORE'}]

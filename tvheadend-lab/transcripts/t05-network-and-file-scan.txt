@@ -1,0 +1,55 @@
+--- create the network: POST /api/mpegts/network/create ---
+{"uuid":"00251c8fda38ce692821fda07e76b8ac"}
+network uuid: 00251c8fda38ce692821fda07e76b8ac
+--- create the mux, URL = the fixture file: POST /api/mpegts/network/mux_create ---
+{"uuid":"1fc9ecb764b5e4e63382092873b56a02"}
+--- poll the mux while it scans (scan_state/scan_result decoded in t05b) ---
+poll 1: scan_state 1 scan_result 0 num_svc 0 onid 65536 tsid 65536
+poll 2: scan_state 1 scan_result 0 num_svc 0 onid 65536 tsid 65536
+poll 3: scan_state 1 scan_result 0 num_svc 0 onid 65536 tsid 65536
+poll 4: scan_state 3 scan_result 0 num_svc 1 onid 1 tsid 1
+--- the service the scan created ---
+{
+    "entries": [
+        {
+            "uuid": "c4453563b5681ac570d9ea8beafaf493",
+            "network": "Lab Loopback Network",
+            "multiplex": "Harbour Light Mux",
+            "multiplex_uuid": "1fc9ecb764b5e4e63382092873b56a02",
+            "sid": 1,
+            "lcn": 0,
+            "lcn_minor": 0,
+            "lcn2": 0,
+            "srcid": 0,
+            "svcname": "Harbour Light Test",
+            "provider": "Fictional Workshop",
+            "dvb_servicetype": 1,
+            "dvb_eit_processing": 0,
+            "dvb_subtitle_processing": 0,
+            "dvb_ignore_matching_subtitle": false,
+            "prefcapid": 0,
+            "prefcapid_lock": 0,
+            "force_caid": 0,
+            "pts_shift": 0,
+            "created": 1794091213,
+            "last_seen": 1794091213,
+            "enabled": true,
+            "auto": 0,
+            "channel": [],
+            "priority": 0,
+            "encrypted": false,
+            "caid": "",
+            "s_type_user": -1
+        }
+    ],
+    "total": 1
+}
+--- the scan, in the server's own words (table handlers) ---
+2026-11-07 22:40:13.154 [  DEBUG] tbl-base: sdt: onid 0001 (1) tsid 0001 (1)
+2026-11-07 22:40:13.154 [  DEBUG] tbl-base: pat: 0x7c9e6c002200: tsid 0001 (1)
+2026-11-07 22:40:13.154 [  DEBUG] tbl-base: pat:  sid 0001 (1) on pid 1000 (4096)
+2026-11-07 22:40:13.154 [  DEBUG] tbl-base: pmt: sid 0001 (1)
+2026-11-07 22:40:13.154 [  DEBUG] tbl-base: pmt:  pid 0100 estype 2
+2026-11-07 22:40:13.154 [  DEBUG] tbl-base: pmt:    type MPEG2VIDEO position 0
+2026-11-07 22:40:13.154 [  DEBUG] tbl-base: pmt:  pid 0101 estype 3
+2026-11-07 22:40:13.154 [  DEBUG] tbl-base: pmt:    type MPEG2AUDIO position 1

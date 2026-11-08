@@ -1,0 +1,79 @@
+The lab — one extracted package, one invented stream, nobody else's television
+====================================================================
+
+The lab is TVHeadend as its project ships it for Ubuntu
+24.04: the official noble .deb, tvheadend
+4.3-2937~g0589ce006~noble (17,546,778 bytes, SHA256 verified
+against the repository index), extracted with dpkg-deb -x
+into scratch — never installed — on an Ubuntu 24.04
+sandbox. Two libraries were missing (libdvbcsa.so.1,
+libpcre.so.3); their Ubuntu packages were downloaded and
+extracted beside it, and ldd then reported zero missing.
+The machine's own apt sources hold no tvheadend package.
+Docker could not be the route: the client (29.1.3) is
+present but there is no daemon — docker info fails to
+connect to /var/run/docker.sock. Building from source was
+not attempted (timebox; the package route worked).
+
+  * Running an extracted binary: it expects its data tree
+    at the compiled-in path /usr/share/tvheadend. Without
+    it, the server started both listeners, logged "profile:
+    no default streaming profile! reinstall data files",
+    and crashed (signal 6) — the excerpt is kept in
+    drivers/first-attempt-crash-excerpt.txt. The working
+    runs used drivers/run-in-namespace.sh: a private mount
+    namespace (unshare -rm) with the extracted data tree
+    bind-mounted over that path inside the namespace only.
+    The host kept an empty directory, removed afterwards.
+
+  * The server: configuration in scratch (fresh), -C first
+    run (wide-open entry, its warning logged), bound to
+    127.0.0.1, web 18091, HTSP 19091. /api/serverinfo:
+    version 4.3-2937~g0589ce006, API version 20. HTSP was
+    verified as a listening socket and a TCP connect; no
+    client spoke the protocol.
+
+  * The fixture (fixtures/harbour-light.ts): a 20-second
+    MPEG-TS made by ffmpeg 8.1.2 — testsrc2 pattern and a
+    440 Hz tone, MPEG-2 video 320x240 at 400k, MP2 audio at
+    96k, service name "Harbour Light Test", provider
+    "Fictional Workshop", ONID/TSID/SID all 1. 1.5 MB.
+    Invented in full; no broadcaster, no real programme.
+
+  * Drivers (drivers/): run-lab.sh performs the whole lab
+    and writes transcripts t00-t09; run-in-namespace.sh is
+    the server wrapper above; serve-test-stream.sh is the
+    pipe program (ffmpeg -re -stream_loop -1, codecs copied,
+    the fixture's service metadata rewritten into the new
+    stream's tables).
+
+  * What the transcripts prove (t00-t09): environment and
+    the closed Docker route (t00); download hash, extract,
+    the two missing libraries, the version (t01); the full
+    --help (t02); the fixture under ffprobe (t03); the
+    first run, both doors, serverinfo (t04); network and
+    file-mux creation, the scan polls (PEND/NONE/0 to
+    ACTIVE/num_svc 1, IDs 65536 replaced by 1/1), the
+    table log lines, and the service record (t05, enums in
+    t05b); mapping (asynchronous: channel polls 0 then 1),
+    the playlist, and 952K of playback in 8 seconds (t06);
+    the EPG registration line and the honest zero events
+    (t07); DVR storage set, then the file-mux recording —
+    entry says 30 s / Completed OK / 0 errors, file
+    measures 10.93 s (t08); the pipe mux after a restart —
+    spawn line, scan_result OK, 540K playback in 8 s, and
+    the pipe recording: 35 s asked, 34.45 s kept, 0 errors
+    (t09).
+
+  * Kept failures, on purpose: the data-tree crash; two
+    400s from posting creates to the general save endpoint
+    before the interface's own create endpoints were found
+    in its shipped code; the mapper's asynchronous minute;
+    a mid-flight pipe-URL edit that left the mux in a
+    bad-service state until a restart; and, in exploration,
+    two file-mux recordings that failed outright — "No
+    input detected", ending "Time missed"
+    (drivers/file-recording-failures-excerpt.txt). The
+    final run's file recording completed but short, which
+    is the same lesson with better manners: a recording is
+    the stream it was given, kept.

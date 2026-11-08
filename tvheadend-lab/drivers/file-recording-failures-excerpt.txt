@@ -1,0 +1,4 @@
+2026-11-07 22:26:46.720 [  ERROR] dvr: Recording unable to start: "Harbour Light Recording Test": No input detected
+2026-11-07 22:27:09.019 [   INFO] dvr: "Harbour Light Recording Test" on "Harbour Light Test": End of program: Time missed
+2026-11-07 22:27:48.345 [  ERROR] dvr: Recording unable to start: "Harbour Light Recording Test Two": No input detected
+2026-11-07 22:28:26.019 [   INFO] dvr: "Harbour Light Recording Test Two" on "Harbour Light Test": End of program: Time missed

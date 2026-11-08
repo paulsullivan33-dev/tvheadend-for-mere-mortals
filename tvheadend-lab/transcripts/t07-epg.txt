@@ -1,0 +1,12 @@
+--- server log: the mux is registered for over-the-air EPG ---
+2026-11-07 22:40:13.140 [   INFO] epggrab: Harbour Light Mux in Lab Loopback Network - registering mux for OTA EPG
+2026-11-07 22:39:59.122 [   INFO] epggrab: module uk_freesat created
+2026-11-07 22:39:59.122 [   INFO] epggrab: module uk_freesat_eit created
+2026-11-07 22:39:59.122 [   INFO] epggrab: module uk_freeview created
+2026-11-07 22:39:59.122 [   INFO] epggrab: module nz_freeview2 created
+2026-11-07 22:39:59.122 [   INFO] epggrab: module nz_freeview1 created
+2026-11-07 22:39:59.122 [   INFO] epggrab: module viasat_baltic created
+--- GET /api/epg/events/grid: what the guide actually holds ---
+{"totalCount":0,"entries":[]}
+The fixture stream contains no EIT (event information) tables, so
+the honest count is zero. Chapter 9 keeps EPG beyond this labelled.

@@ -1,0 +1,41 @@
+--- point the DVR at scratch storage first (its default was the home folder) ---
+{}
+storage now: /home/hatch/workspace/.batch-351-363/scratch-tvheadend/recordings
+--- create a manual DVR entry, 1794091232 to 1794091262 (30 seconds) ---
+{"uuid":"b18fe00695fbc4c5cd00d158608b9c73"}
+waiting 70 seconds for the attempt to play out...
+--- the finished-recording record (selected fields) ---
+disp_title = Harbour Light Recording Test
+duration = 30
+filesize = 750308
+status = Completed OK
+sched_status = completed
+errors = 0
+data_errors = 0
+filename = /home/hatch/workspace/.batch-351-363/scratch-tvheadend/recordings/Harbour Light Recording Test.ts
+--- but measure the file itself: how much programme is actually in it? ---
+/home/hatch/workspace/.batch-351-363/scratch-tvheadend/recordings/Harbour Light Recording Test.ts
+duration=10.930022
+size=750308
+
+--- files in the recordings folder ---
+total 736
+drwxrwx--- 1 root root     62 Nov  7 22:40 .
+drwxrwx--- 1 root root    356 Nov  7 22:40 ..
+-rw-rw-r-- 1 root root 750308 Nov  7 22:40 Harbour Light Recording Test.ts
+--- the server log tells the story ---
+2026-11-07 22:40:27.978 [   INFO] subscription: 0003: "DVR: Harbour Light Recording Test" subscribing on channel "Harbour Light Test", weight: 500, adapter: "IPTV #1", network: "Lab Loopback Network", mux: "Harbour Light Mux", provider: "Fictional Workshop", service: "Harbour Light Test", profile="pass", username=""
+2026-11-07 22:41:02.001 [   INFO] subscription: 0003: "DVR: Harbour Light Recording Test" unsubscribing from "Harbour Light Test", username=""
+2026-11-07 22:41:02.001 [   INFO] dvr: "Harbour Light Recording Test" on "Harbour Light Test": End of program: Completed OK
+--- exploration kept the other outcome of the same attempt (twice) ---
+2026-11-07 22:26:46.720 [  ERROR] dvr: Recording unable to start: "Harbour Light Recording Test": No input detected
+2026-11-07 22:27:09.019 [   INFO] dvr: "Harbour Light Recording Test" on "Harbour Light Test": End of program: Time missed
+2026-11-07 22:27:48.345 [  ERROR] dvr: Recording unable to start: "Harbour Light Recording Test Two": No input detected
+2026-11-07 22:28:26.019 [   INFO] dvr: "Harbour Light Recording Test Two" on "Harbour Light Test": End of program: Time missed
+Verdict, measured: the window asked for 30 seconds. Tvheadend closed
+this run as Completed OK with zero errors, yet the kept file holds
+about 10 seconds of programme (ffprobe above) - the one-shot file
+had only that much left to give when the recorder tuned to it. In
+exploration the same attempt failed outright, twice, with No input
+detected / Time missed (lines above). A file is not a broadcast:
+it does not keep coming. Chapter 10 tells both halves.
